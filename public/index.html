@@ -1,0 +1,60 @@
+ <!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Data Form</title>
+</head>
+<body>
+    <h1>User Data Form</h1>
+    <form id="userForm">
+        <input type="text" id="firstName" placeholder="First Name" required pattern="[A-Za-z]{2,30}" title="First name must be between 2 and 30 characters long and contain only letters."><br>
+        <input type="text" id="lastName" placeholder="Last Name" required pattern="[A-Za-z]{2,30}" title="Last name must be between 2 and 30 characters long and contain only letters."><br>
+        <input type="text" id="mobileNo" placeholder="Mobile No" required pattern="\d{10}" title="Mobile number must be 10 digits."><br>
+        <input type="email" id="email" placeholder="Email" required><br>
+        <input type="text" id="address" placeholder="Address" required minlength="5" title="Address must be at least 5 characters long."><br>
+        <input type="text" id="street" placeholder="Street" required minlength="2" title="Street must be at least 2 characters long."><br>
+        <input type="text" id="city" placeholder="City" required pattern="[A-Za-z\s]{2,30}" title="City name must be between 2 and 30 characters long and contain only letters and spaces."><br>
+        <input type="text" id="state" placeholder="State" required pattern="[A-Za-z\s]{2,30}" title="State name must be between 2 and 30 characters long and contain only letters and spaces."><br>
+        <input type="text" id="country" placeholder="Country" required pattern="[A-Za-z\s]{2,30}" title="Country name must be between 2 and 30 characters long and contain only letters and spaces."><br>
+        <input type="text" id="loginId" placeholder="Login ID" required pattern="[A-Za-z0-9]{8,}" title="Login ID must be alphanumeric and at least 8 characters long."><br>
+        <input type="password" id="password" placeholder="Password" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$" title="Password must be at least 6 characters long, with 1 uppercase letter, 1 lowercase letter, and 1 special character."><br>
+        <button type="button" onclick="saveUser()">Save</button>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function saveUser() {
+            const userData = {
+                firstName: $("#firstName").val(),
+                lastName: $("#lastName").val(),
+                mobileNo: $("#mobileNo").val(),
+                email: $("#email").val(),
+                address: $("#address").val(),
+                street: $("#street").val(),
+                city: $("#city").val(),
+                state: $("#state").val(),
+                country: $("#country").val(),
+                loginId: $("#loginId").val(),
+                password: $("#password").val(),
+            };
+
+            $.ajax({
+                url: 'http://localhost:3000/api/user/save',  // Make sure the URL is correct
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(userData),
+                success: function(response) {
+                    alert('User saved successfully!');
+                    $('#userForm')[0].reset();  // Reset the form after successful save
+                },
+                error: function(err) {
+                    const errorMessage = err.responseJSON && err.responseJSON.message ? err.responseJSON.message : 'Unknown error';
+                    alert('Error saving user: ' + errorMessage);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
